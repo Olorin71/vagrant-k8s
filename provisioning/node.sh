@@ -7,6 +7,12 @@ export internalip=`ip addr show eth0 | grep "inet\b" | awk '{print $2}' | cut -d
 
 echo This VM has IP address: $internalip
 
+until [ -f /vagrant/configs/admin.json ]
+do
+  echo "admin.json not found. Waiting for 5s ..."
+  sleep 5
+done
+
 echo Copying credentials to /home/vagrant ...
 mkdir -p /home/vagrant/.kube
 cp -i /vagrant/configs/admin.json /home/vagrant/.kube/config
