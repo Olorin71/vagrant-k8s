@@ -41,9 +41,9 @@ EOF
 echo "Deploying the dashboard..."
 kubectl apply -f "https://raw.githubusercontent.com/kubernetes/dashboard/v2.7.0/aio/deploy/recommended.yaml"
 
-kubectl -n kubernetes-dashboard get secret/admin-user -o go-template="{{.data.token | base64decode}}" >> "${config_path}/token"
-echo "The following token was also saved to: configs/token"
-cat "${config_path}/token"
+kubectl -n kubernetes-dashboard get secret/admin-user -o go-template="{{.data.token | base64decode}}" > /vagrant/configs/token
+echo "The following token was also saved to: /vagrant/configs/token"
+cat /vagrant/configs/token
 echo "
 Use it to log in at:
 http://localhost:8001/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy/#/overview?namespace=kubernetes-dashboard
