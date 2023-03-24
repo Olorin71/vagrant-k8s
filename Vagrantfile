@@ -2,7 +2,7 @@
 # vi: set ft=ruby :
 require_relative 'vagrant_secrets.rb'
 include Secrets
-
+IP_NET = Secrets::NODE_NETWORK
 Vagrant.configure("2") do |config|
 
   config.vm.provision :shell, path: "provisioning/commons.sh",
@@ -13,7 +13,7 @@ Vagrant.configure("2") do |config|
   config.vm.define "k8s-cp" do |cp|
     cp.vm.box = "generic/ubuntu2204"
     cp.vm.hostname="k8s-cp"
-    cp.vm.network "private_network", ip: Secrets::NODE_NETWORK + "10"
+    cp.vm.network "private_network", ip: IP_NET + "10"
     cp.vm.provision :shell, path: "provisioning/control-plane.sh",
       env: {
             "USER_NAME" => Secrets::USER_NAME,
@@ -37,7 +37,7 @@ Vagrant.configure("2") do |config|
     config.vm.define "k8s-node#{i}" do |node|
       node.vm.box = "generic/ubuntu2204"
       node.vm.hostname="k8s-node#{i}"
-      node.vm.network "private_network", ip: Secrets::NODE_NETWORK + "#{10 + i}"
+      node.vm.network "private_network", ip: IP_NET + "#{10 + i}"
       node.vm.provision :shell, path: "provisioning/node.sh",
         env: {
               "USER_NAME" => Secrets::USER_NAME
