@@ -15,6 +15,7 @@ Vagrant.configure("2") do |config|
     cp.vm.hostname="k8s-cp"
     cp.vm.network "private_network",
       :ip => IP_NET + "10",
+      :type => "dhcp",
       :libvirt__network_name => "virt-k8s",
       :libvirt__network_address => IP_NET + "0"
     cp.vm.provision :shell, path: "provisioning/control-plane.sh",
@@ -42,6 +43,7 @@ Vagrant.configure("2") do |config|
       node.vm.hostname="k8s-node#{i}"
       node.vm.network "private_network",
       :ip => IP_NET + "#{10 + i}",
+      :type => "dhcp",
       :libvirt__network_name => "virt-k8s",
       :libvirt__network_address => IP_NET + "0"
       node.vm.provision :shell, path: "provisioning/node.sh",
