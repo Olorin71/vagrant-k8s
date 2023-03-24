@@ -7,19 +7,19 @@ export internalip=`ip addr show eth0 | grep "inet\b" | awk '{print $2}' | cut -d
 
 echo This VM has IP address: $internalip
 
-until [ -f /vagrant/configs/admin.json ]
+until [ -f /vagrant/configs/admin.conf ]
 do
-  echo "admin.json not found. Waiting for 5s ..."
+  echo "admin.conf not found. Waiting for 5s ..."
   sleep 5
 done
 
 echo Copying credentials to /home/vagrant ...
 mkdir -p /home/vagrant/.kube
-cp -i /vagrant/configs/admin.json /home/vagrant/.kube/config
+cp -i /vagrant/configs/admin.conf /home/vagrant/.kube/config
 chown -R $(id -u vagrant):$(id -g vagrant) /home/vagrant/.kube
 echo Copying credentials to /home/${USER_NAME} ...
 mkdir -p /home/${USER_NAME}/.kube
-cp -i /vagrant/configs/admin.json /home/${USER_NAME}/.kube/config
+cp -i /vagrant/configs/admin.conf /home/${USER_NAME}/.kube/config
 chown -R $(id -u ${USER_NAME}):$(id -g ${USER_NAME}) /home/${USER_NAME}/.kube
 
 # Join cluster
