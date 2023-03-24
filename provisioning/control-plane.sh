@@ -46,6 +46,7 @@ alias calicoctl="kubectl exec -i -n kube-system calicoctl -- /calicoctl"
 echo "Install metrics server helm chart"
 helm repo add metrics-server https://kubernetes-sigs.github.io/metrics-server/
 helm upgrade --install metrics-server metrics-server/metrics-server
+kubectl patch deployment metrics-server -n kube-system --type 'json' -p '[{"op": "add", "path": "/spec/template/spec/containers/0/args/-", "value": "--kubelet-insecure-tls"}]'
 
 echo "add docker registry"
 kubectl create secret docker-registry docker-private --docker-server=${DOCKER_SERVER} --docker-username=${DOCKER_USER} --docker-password=${DOCKER_PWD} --docker-email=${DOCKER_EMAIL}
