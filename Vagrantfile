@@ -16,11 +16,12 @@ Vagrant.configure("2") do |config|
     cp.vm.network "private_network", ip: Secret::NODE_NETWORK + "10"
     cp.vm.provision :shell, path: "provisioning/control-plane.sh",
       env: {
-             "PODS_CIDR" => Secrets::PODS_CIDR,
-             "DOCKER_SERVER" => Secrets::DOCKER_SERVER,
-             "DOCKER_USER" => Secrets::DOCKER_USER,
-             "DOCKER_PWD" => Secrets::DOCKER_PWD,
-             "DOCKER_EMAIL" => Secrets::DOCKER_EMAIL
+            "USER_NAME" => Secrets::USER_NAME,
+            "PODS_CIDR" => Secrets::PODS_CIDR,
+            "DOCKER_SERVER" => Secrets::DOCKER_SERVER,
+            "DOCKER_USER" => Secrets::DOCKER_USER,
+            "DOCKER_PWD" => Secrets::DOCKER_PWD,
+            "DOCKER_EMAIL" => Secrets::DOCKER_EMAIL
            }
     cp.vm.synced_folder "./", "/vagrant", type: "nfs", nfs_udp: false, nfs_version: 4
     cp.vm.provider :libvirt do |domain|
@@ -37,7 +38,10 @@ Vagrant.configure("2") do |config|
       node.vm.box = "generic/ubuntu2204"
       node.vm.hostname="k8s-node#{i}"
       node.vm.network "private_network", ip: Secret::NODE_NETWORK + "#{10 + i}"
-      node.vm.provision :shell, path: "provisioning/node.sh"
+      node.vm.provision :shell, path: "provisioning/node.sh",
+        env: {
+              "USER_NAME" => Secrets::USER_NAME
+             }
       node.vm.synced_folder "./", "/vagrant", type: "nfs", nfs_udp: false, nfs_version: 4
       node.vm.provider :libvirt do |domain|
         domain.default_prefix = ""
